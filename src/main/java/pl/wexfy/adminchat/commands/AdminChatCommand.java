@@ -23,11 +23,6 @@ public class AdminChatCommand {
                         .executes(context -> {
                             CommandSource source = context.getSource();
                             Player p = (Player) source;
-                            String message = StringArgumentType.getString(context, "message");
-                            String server = p.getCurrentServer().map(s -> s.getServerInfo().getName()).orElse("Unknown");
-                            Component coloredMsg = LegacyComponentSerializer.legacyAmpersand()
-                                    .deserialize("&8(&c&lAdminChat&8) &8(&e" + server + "&8) &6" + p.getUsername() + " &e" + message);
-                            source.sendMessage(coloredMsg);
                             if (!(source instanceof Player)) {
                                 source.sendMessage(Component.text("You must be a player to use this command."));
                                 return Command.SINGLE_SUCCESS;
@@ -36,6 +31,10 @@ public class AdminChatCommand {
                                 source.sendMessage(Component.text("You don't have permission to use this command."));
                                 return Command.SINGLE_SUCCESS;
                             }
+                            String message = StringArgumentType.getString(context, "message");
+                            String server = p.getCurrentServer().map(s -> s.getServerInfo().getName()).orElse("Unknown");
+                            Component coloredMsg = LegacyComponentSerializer.legacyAmpersand()
+                                    .deserialize("&8(&c&lAdminChat&8) &8(&e" + server + "&8) &6" + p.getUsername() + " &e" + message);
                             proxy.getAllPlayers().forEach(player -> {
                                 if (player.hasPermission("adminchat.use")) {
                                     player.sendMessage(coloredMsg);
